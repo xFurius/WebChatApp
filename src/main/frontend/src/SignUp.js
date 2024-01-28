@@ -1,4 +1,5 @@
 import { useState } from "react"
+import axios from 'axios'
 
 export default function SignUp(){
   const [firstName, setFirstName] = useState('')
@@ -8,62 +9,53 @@ export default function SignUp(){
 
   function handleSubmit(e){
     e.preventDefault()
-    console.log(firstName, lastName, email, password)
+
+    const user = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    }
+
+    axios.post("/api/signUp", user, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      console.log(res)
+    })
+    .catch(err =>{
+      console.log(err)
+    })
   }
 
   document.title = "SignUp"
       return (
         <div>
           <form onSubmit={handleSubmit}>
-            <label>
-              First Name:
-            </label>
-            <input type="text" name="firstName" onChange={(e) => setFirstName(e.target.value)}/>
-            <label>
-              Last Name:
-            </label>
-            <input type="text" name="lastName" onChange={(e) => setLastName(e.target.value)}/>
-            <label>
-              Email:
-            </label>
-            <input type="email" name="email" onChange={(e) => setEmail(e.target.value)}/>
-            <label>
-              Password
-            </label>
-            <input type="password" name="password" onChange={(e) => setPassword(e.target.value)}/>
-            <input type="submit" />
+            <table>
+              <tr>
+                <td><label>First Name:</label></td>
+                <td><input type="text" name="firstName" onChange={(e) => setFirstName(e.target.value)}/></td>
+              </tr>
+              <tr>
+                <td><label>Last Name:</label></td>
+                <td><input type="text" name="lastName" onChange={(e) => setLastName(e.target.value)}/></td>
+              </tr>
+              <tr>
+                <td><label>Email:</label></td>
+                <td><input type="email" name="email" onChange={(e) => setEmail(e.target.value)}/></td>
+              </tr>
+              <tr>
+                <td><label>Password</label></td>
+                <td><input type="password" name="password" onChange={(e) => setPassword(e.target.value)}/></td>
+              </tr>
+              <tr>
+                <td><input type="submit" value="SignUp"/></td>
+              </tr>
+            </table>
           </form>
         </div>
       )
 };
-
-//     <div th:if="${param.error}">
-//         <p>USER ALREADY EXISTS</p>
-//     </div>
-//     <div class="formDiv">
-//     <form th:action="@{/register}" method="post" th:object="${user}">
-//         <table>
-//         <tr>
-//             <td><input type="text" th:field="*{firstName}" placeholder="First Name" class="formInput"></td>
-//             <td th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></td>
-//         </tr>
-//         <tr>
-//             <td><input type="text" th:field="*{lastName}" placeholder="Last Name" class="formInput"></td>
-//             <td th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></td>
-//         </tr>
-//         <tr>
-//             <td><input type="text" th:field="*{email}" placeholder="Email" class="formInput"></td>
-//             <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></td>
-//         </tr>
-//         <tr>
-//             <td><input type="password" th:field="*{password}" placeholder="Password" class="formInput"></td>
-//             <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
-//         </tr>
-//         <tr>
-//             <td><input type="submit" value="REGISTER" class="buttonSubmit"></td>
-//         </tr>
-//     </table>
-//     </form>
-//     </div>
-// </body>
-// </html>

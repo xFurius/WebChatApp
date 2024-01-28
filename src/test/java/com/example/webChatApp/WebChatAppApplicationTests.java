@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class WebChatAppApplicationTests {
 
-	@Test
+	@MainController
 	void contextLoads() {
 	}
 
