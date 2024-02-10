@@ -1,11 +1,14 @@
 import { useState } from "react"
 import axios from 'axios'
 
+//add form validation
+
 export default function SignUp(){
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [emailExists, setEmailExists] = useState(false)
 
   function handleSubmit(e){
     e.preventDefault()
@@ -26,7 +29,11 @@ export default function SignUp(){
       console.log(res)
     })
     .catch(err =>{
-      console.log(err)
+      console.log(err.response)
+      //email exists in db
+      if(err.response.status === 302){
+        setEmailExists(true)
+      }
     })
   }
 
@@ -46,6 +53,7 @@ export default function SignUp(){
               <tr>
                 <td><label>Email:</label></td>
                 <td><input type="email" name="email" onChange={(e) => setEmail(e.target.value)}/></td>
+                {emailExists && <td>Email already in use</td>}
               </tr>
               <tr>
                 <td><label>Password</label></td>

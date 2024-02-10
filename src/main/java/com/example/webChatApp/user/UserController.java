@@ -1,22 +1,34 @@
 package com.example.webChatApp.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Random;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import lombok.AllArgsConstructor;
 
 @Controller
+@AllArgsConstructor
 public class UserController {
-    @Autowired
     private UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @RequestMapping("/api/signUp")
-    public @ResponseBody User signUpTest(@RequestBody User user) {
+    public ResponseEntity<String> signUp(@RequestBody User user) {
+        if(userRepository.findByEmail(user.getEmail()).isPresent()){
+            return ResponseEntity.status(HttpStatus.FOUND).body("Email already in use");
+        } 
+        
         System.out.println(user.toString());
-        //set uid
-        //encode password and user.setpassword
+        user.setUID(""+new Random(System.currentTimeMillis()).nextInt(99999999));
+        //check if uid exists
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         userRepository.save(user);
-        return user;
+        return ResponseEntity.ok().body("");
     }  
 }
